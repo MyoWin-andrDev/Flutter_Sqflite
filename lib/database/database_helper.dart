@@ -15,16 +15,18 @@ class DatabaseHelper{
     String path = join(dataPath, "student.db");
 
     _db = await openDatabase(path);
-    await _db.execute("CREATE TABLE IF NOT EXISTS $tableName( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, email TEXT");
+    await _db.execute("CREATE TABLE IF NOT EXISTS $tableName( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, email TEXT)");
     return _db;
   }
   //Add Student
   Future<int> insertStudent(Map<String, dynamic> student) async {
+    _db = await _createDatabase();
     return await _db.insert(tableName, student);
   }
 
   //GetAllStudent
   Future<List<Map<String, dynamic>>> getAllStudent() async {
+    _db = await _createDatabase();
     return await _db.query(tableName, columns: ['id', 'name', 'address', 'email']);
   }
   
