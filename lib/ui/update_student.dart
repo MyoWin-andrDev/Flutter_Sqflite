@@ -1,51 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sqlite/database/database_helper.dart';
-import 'package:sqlite/model/student_model.dart';
 
-class AddStudent extends StatefulWidget {
-  const AddStudent({super.key});
+import '../database/database_helper.dart';
+import '../model/student_model.dart';
+
+class UpdateStudent extends StatefulWidget {
+  final int id;
+  final String name;
+  final String email;
+  final String phone;
+  final String address;
+
+  const UpdateStudent({super.key, required this.id, required this.name, required this.email, required this.phone, required this.address});
+
 
   @override
-  State<AddStudent> createState() => _AddStudentState();
+  State<UpdateStudent> createState() => _UpdateStudentState();
 }
 
-class _AddStudentState extends State<AddStudent> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? name,address,email,phone;
-
+class _UpdateStudentState extends State<UpdateStudent> {
+  GlobalKey<FormState> _formKey = GlobalKey();
+  String? name, address, email, phone;
+  @override
+  void initState() {
+    super.initState();
+    name = widget.name;
+    address = widget.address;
+    email = widget.email;
+    phone = widget.phone;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context, true);
-          },
-          icon: Icon(Icons.arrow_back_ios_new),
-        ),
-        title: Text("Add Student"),
+        title: Text("Update Student"),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () async {
-              if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-                _formKey.currentState?.save();
-               int result = await DatabaseHelper().insertStudent(
-                 StudentModel.insertStudent(name: name ?? '', email: email ?? '', address: address ?? '', phone: phone ?? '')
-                );
-               if(result > 0){
-                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Student Added Successfully")));
-                 Navigator.pop(context);
-               }
-               else{
-                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Something went wrong!!!")));
-               }
-               print(result);
-              }
-            },
-            icon: Icon(Icons.save),
-          )
+          TextButton(
+              onPressed: () async{
+                if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+                  _formKey.currentState?.save();
+                  int result = await DatabaseHelper().insertStudent(
+                      StudentModel.insertStudent(name: name ?? '', email: email ?? '', address: address ?? '', phone: phone ?? '')
+                  );
+                  if(result > 0){
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Student Added Successfully")));
+                    Navigator.pop(context);
+                  }
+                  else{
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Something went wrong!!!")));
+                  }
+                  print(result);
+                }
+              },
+              child: Text("Update"))
         ],
       ),
       body: Form(
@@ -60,6 +67,7 @@ class _AddStudentState extends State<AddStudent> {
                 Text("Name", style: TextStyle(fontSize: 18)),
                 SizedBox(height: 8),
                 TextFormField(
+                  initialValue: name,
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.person),
                       hintText: "Enter Name",
@@ -86,6 +94,7 @@ class _AddStudentState extends State<AddStudent> {
                 Text("Email", style: TextStyle(fontSize: 18)),
                 SizedBox(height: 8),
                 TextFormField(
+                  initialValue: email,
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email),
                       hintText: "Enter Email",
@@ -116,6 +125,7 @@ class _AddStudentState extends State<AddStudent> {
                 Text("Phone No.", style: TextStyle(fontSize: 18)),
                 SizedBox(height: 8),
                 TextFormField(
+                  initialValue: phone,
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.home),
                       hintText: "Enter Phone",
@@ -143,6 +153,7 @@ class _AddStudentState extends State<AddStudent> {
                 Text("Address", style: TextStyle(fontSize: 18)),
                 SizedBox(height: 8),
                 TextFormField(
+                  initialValue: address,
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.home),
                       hintText: "Enter Address",
@@ -167,3 +178,4 @@ class _AddStudentState extends State<AddStudent> {
     );
   }
 }
+
