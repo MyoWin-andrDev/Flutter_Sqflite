@@ -15,7 +15,7 @@ class DatabaseHelper{
     String path = join(dataPath, "student.db");
 
     _db = await openDatabase(path);
-    await _db.execute("CREATE TABLE IF NOT EXISTS $tableName( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, email TEXT)");
+    await _db.execute("CREATE TABLE IF NOT EXISTS $tableName( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, email TEXT, phone TEXT)");
     return _db;
   }
   //Add Student
@@ -27,20 +27,23 @@ class DatabaseHelper{
   //GetAllStudent
   Future<List<Map<String, dynamic>>> getAllStudent() async {
     _db = await _createDatabase();
-    return await _db.query(tableName, columns: ['id', 'name', 'address', 'email']);
+    return await _db.query(tableName, columns: ['id', 'name', 'address', 'email', 'phone']);
   }
   
   //UpdateStudent
   Future<int> updateStudent(Map<String, dynamic> student, int id) async {
+    _db = await _createDatabase();
     return await _db.update(tableName, student, where: "id = ?", whereArgs: [id]);
   }
 
   //Delete Student
   Future<int> deleteStudent(int id) async {
+    _db = await _createDatabase();
     return await _db.delete(tableName, where: "id = ?", whereArgs: [id]);
   }
   //Format Table
   Future<int> resetStudent() async{
+    _db = await _createDatabase();
     return await _db.rawDelete("DELETE FROM $tableName");
   }
 }
