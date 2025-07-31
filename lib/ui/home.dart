@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:sqlite/database/database_helper.dart';
 import 'package:sqlite/ui/add_student.dart';
 import 'package:sqlite/ui/update_student.dart';
@@ -13,6 +14,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,14 +48,20 @@ class _HomeState extends State<Home> {
                       child: Row(
                         children: [
                           IconButton(
-                              onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateStudent(id: student['id'], name: student['name'], email: student['email'], phone: student['phone'], address: student['address'])));
+                              onPressed: () async{
+                                await Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateStudent(id: student['id'], name: student['name'], email: student['email'], phone: student['phone'], address: student['address'])));
+                                setState(() {});
                               },
                               icon: Icon(Icons.edit, color: Colors.blue),
                               padding: EdgeInsets.all(8)
                           ),
                           IconButton(
-                              onPressed: (){},
+                              onPressed: () async{
+                                await DatabaseHelper().deleteStudent(student['id']);
+                                setState(() {
+
+                                });
+                              },
                               icon: Icon(Icons.delete, color: Colors.red),
                               padding: EdgeInsets.all(8)
                           ),

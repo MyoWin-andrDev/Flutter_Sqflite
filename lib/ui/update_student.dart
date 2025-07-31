@@ -20,9 +20,11 @@ class UpdateStudent extends StatefulWidget {
 class _UpdateStudentState extends State<UpdateStudent> {
   GlobalKey<FormState> _formKey = GlobalKey();
   String? name, address, email, phone;
+  late final int id;
   @override
   void initState() {
     super.initState();
+    id = widget.id;
     name = widget.name;
     address = widget.address;
     email = widget.email;
@@ -39,11 +41,10 @@ class _UpdateStudentState extends State<UpdateStudent> {
               onPressed: () async{
                 if (_formKey.currentState != null && _formKey.currentState!.validate()) {
                   _formKey.currentState?.save();
-                  int result = await DatabaseHelper().insertStudent(
-                      StudentModel.insertStudent(name: name ?? '', email: email ?? '', address: address ?? '', phone: phone ?? '')
-                  );
+                  int result = await DatabaseHelper().updateStudent(
+                      StudentModel.insertStudent(name: name ?? '', email: email ?? '', address: address ?? '', phone: phone ?? ''),id ?? 1);
                   if(result > 0){
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Student Added Successfully")));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Student Updated Successfully")));
                     Navigator.pop(context);
                   }
                   else{
